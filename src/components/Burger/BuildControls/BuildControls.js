@@ -7,16 +7,19 @@ const controls = [
   {label: 'Salad', type: 'salad'},
   {label: 'Cheese', type: 'cheese'},
   {label: 'Meat', type: 'meat'},
-  {label: 'Salad', type: 'salad'},
+  {label: 'Bacon', type: 'bacon'},
 ];
 
 const buildControls = (props) => {
   return (
     <div className={styles.BuildControls}>
+      <div className={styles.Price}>Current Price: <strong>{props.totalPrice.toFixed(2)}</strong></div>
       {controls.map((ctrl, index) => <BuildControl
         key={ctrl+index}
+        disabled={props.disabled[ctrl.type]}
         label={ctrl.label}
-        added={() => props.ingredientAdded(ctrl.type)}/>
+        added={() => props.ingredientAdded(ctrl.type)}
+        removed={() => props.ingredientRemoved(ctrl.type)} />
       )}
     </div>
   );
