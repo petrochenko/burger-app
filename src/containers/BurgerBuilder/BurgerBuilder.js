@@ -2,7 +2,10 @@ import React, {Component} from 'react';
 
 import Aux from '../../hoc/Auxiliary';
 import Burger from '../../components/Burger/Burger';
-import BuildControls from "../../components/Burger/BuildControls/BuildControls";
+import BuildControls from '../../components/Burger/BuildControls/BuildControls';
+import Modal from '../../components/UI/Modal/Modal';
+import OrderSummury from '../../components/Burger/OrderSummary/OrderSummary';
+
 
 const INGREDIENT_PRICES = {
   salad: 0.5,
@@ -20,14 +23,15 @@ class BurgerBuilder extends Component {
       meat: 0
     },
     totalPrice: 4,
-    purchasable: false
+    purchasable: false,
+    purchasing: false,
   };
 
   updatePurchaseState(ingredients) {
     const sum = Object.keys(ingredients)
       .map(ingKey => {
-      return ingredients[ingKey];
-    })
+        return ingredients[ingKey];
+      })
       .reduce((sum, item) => sum + item, 0);
     this.setState({purchasable: sum > 0});
   }
@@ -69,6 +73,18 @@ class BurgerBuilder extends Component {
     this.updatePurchaseState(updatedIngredients);
   };
 
+  purchaseHandler = () => {
+    this.setState({purchasing: true});
+  };
+
+  purchaseCancelHandler = () => {
+    this.setState({purchasing: false})
+  };
+
+  purchaseContinueHandler = () => {
+    alert('You continue!');
+  };
+
   render() {
     const disableControls = {
       ...this.state.ingredients
@@ -80,6 +96,15 @@ class BurgerBuilder extends Component {
 
     return (
       <Aux>
+        <Modal
+          modalClosed={this.purchaseCancelHandler}
+          show={this.state.purchasing}>
+          <OrderSummury
+            purchaseCancelled={this.purchaseCancelHandler}
+            purchaseContinued={this.purchaseContinueHandler}
+            ingredients={this.state.ingredients}
+            totalPrice={this.state.totalPrice}/>
+        </Modal>
         <Burger ingredients={this.state.ingredients}/>
         <BuildControls
           totalPrice={this.state.totalPrice}
@@ -87,6 +112,7 @@ class BurgerBuilder extends Component {
           ingredientRemoved={this.removeIngredientHandler}
           disabled={disableControls}
           purchasable={this.state.purchasable}
+          ordered={this.purchaseHandler}
         />
       </Aux>
     );
