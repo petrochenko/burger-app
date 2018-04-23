@@ -12,6 +12,9 @@ class Orders extends Component {
   };
 
   componentDidMount() {
+    this.setState({
+      loading: true
+    });
     axios.get('/orders.json')
       .then(res => {
         const orders = [];
